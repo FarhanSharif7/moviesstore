@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'movies',
     'accounts',
     'cart',
-    'top_review'
+    'top_review',
 
 ]
 
