@@ -1,3 +1,12 @@
+from django.views.decorators.http import require_POST
+
+@login_required
+@require_POST
+def like_review(request, id, review_id):
+    review = get_object_or_404(Review, id=review_id, movie_id=id)
+    review.likes += 1
+    review.save()
+    return redirect('movies.show', id=id)
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Movie, Review
 from django.contrib.auth.decorators import login_required
