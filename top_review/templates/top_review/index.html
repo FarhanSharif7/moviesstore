@@ -24,7 +24,13 @@
               <span>
                 <strong>{{ review.user.username }}</strong>: {{ review.comment }}
               </span>
-              <span class="badge bg-primary rounded-pill">{{ review.likes }} likes</span>
+              <span>
+                <span class="badge bg-primary rounded-pill me-2">{{ review.likes }} likes</span>
+                <form method="post" action="{% url 'top_review.like_review' review.id %}" style="display:inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-success">Like</button>
+                </form>
+              </span>
             </li>
           {% empty %}
             <li class="list-group-item">No reviews yet.</li>
