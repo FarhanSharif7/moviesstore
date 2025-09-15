@@ -1,4 +1,8 @@
 from django.views.decorators.http import require_POST
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Movie, Review
+from django.contrib.auth.decorators import login_required
+
 
 @login_required
 @require_POST
@@ -7,9 +11,7 @@ def like_review(request, id, review_id):
     review.likes += 1
     review.save()
     return redirect('movies.show', id=id)
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Movie, Review
-from django.contrib.auth.decorators import login_required
+
 
 def index(request):
     search_term = request.GET.get('search')
