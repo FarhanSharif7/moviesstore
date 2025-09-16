@@ -37,6 +37,12 @@
               class="btn bg-dark text-white">
             {{ movie.name }}
             </a>
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'hide.add' movie.id %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-warning mt-2">Hide</button>
+            </form>
+            {% endif %}
           </div>
         </div>
       </div>

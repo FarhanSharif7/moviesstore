@@ -15,10 +15,15 @@ def like_review(request, id, review_id):
 
 def index(request):
     search_term = request.GET.get('search')
-    if search_term:
-        movies = Movie.objects.filter(name__icontains=search_term)
+    if request.user.is_authenticated:
+        from hide.models import HiddenMovie
+        hidden_ids = HiddenMovie.objects.filter(user=request.user).values_list('movie_id', flat=True)
     else:
-        movies = Movie.objects.all()
+        hidden_ids = []
+    if search_term:
+        movies = Movie.objects.filter(name__icontains=search_term).exclude(id__in=hidden_ids)
+    else:
+        movies = Movie.objects.exclude(id__in=hidden_ids)
     template_data = {}
     template_data['title'] = 'Movies'
     template_data['movies'] = movies
