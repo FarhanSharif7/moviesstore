@@ -1,0 +1,62 @@
+{%extends 'base.html'%}
+{%block content%}
+
+<div class="container mt-4">
+    <h1> Petitions</h1>
+
+
+    <div class="mb-3">
+        {% if user.is_authenticated %}
+            <a href="{% url 'petition.create' %}" class="btn btn-primary">Create Petition</a>
+        {% else %}
+            <a href="{% url 'accounts.login' %}?next={% url 'petition.create' %}" class="btn btn-primary">Create Petition</a>
+        {% endif %}
+    </div>
+
+    <div class = "list-group">
+        {% for petition in petitions %}
+             <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+
+                    <h5>{{ petition.title }}</h5>
+                    <p>{{ petition.description }}</p>
+                    <small>Votes: {{ petition.signatures.count }}</small>
+               </div>
+
+               <div>
+                {% if user.is_authenticated %}
+                    {% if user in petition.signatures.all %}
+                     <form method="POST" action="{% url 'petition.unvote' petition.id %}" style="display:inline;">
+                               {% csrf_token %}
+                               <button class="btn btn-warning btn-sm">Unvote</button>
+                           </form>
+                       {% else %}
+                           <form method="POST" action="{% url 'petition.vote' petition.id %}" style="display:inline;">
+                               {% csrf_token %}
+                               <button class="btn btn-success btn-sm">Vote</button>
+                           </form>
+                       {% endif %}
+
+
+                {% if user == petition.created_by %}
+                    <a href="{% url 'petition.edit' petition.id %}" class="btn btn-info btn-sm">Edit</a>
+                           <form method="POST" action="{% url 'petition.delete' petition.id %}" style="display:inline;">
+                               {% csrf_token %}
+                               <button class="btn btn-danger btn-sm">Delete</button>
+                           </form>
+                       {% endif %}
+                   {% else %}
+                       <button class="btn btn-secondary btn-sm" disabled>Login to vote</button>
+                   {% endif %}
+               </div>
+           </div>
+       {% empty %}
+           <p>No petitions yet. Be the first to create one!</p>
+       {% endfor %}
+   </div>
+</div>
+{% endblock %}
+
+
+
+
